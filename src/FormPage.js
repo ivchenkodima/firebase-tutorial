@@ -60,6 +60,11 @@ class FormPage extends React.Component {
     listRef.push(_values);
   }
 
+  removeItem(itemId) {
+    const itemRef = firebase.database().ref(`/list/${itemId}`);
+    itemRef.remove();
+  }
+
   render() {
     return (
       <Styles>
@@ -126,8 +131,8 @@ class FormPage extends React.Component {
           )}
         />
         <ul>
-          {this.state.list.map(({ username, lastName, age }) => (
-            <li>{`${username}- ${lastName}: ${age}`}</li>
+          {this.state.list.map(({ username, lastName, age }, key) => (
+            <li key={key}>{`${username}- ${lastName}: ${age}`}</li>
           ))}
         </ul>
       </Styles>
