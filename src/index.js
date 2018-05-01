@@ -6,6 +6,7 @@ import registerServiceWorker from "./registerServiceWorker";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import FormPage from "./FormPage";
+import EditFormPage from "./EditFormPage";
 const Home = () => <div>lorem</div>;
 
 const BasicExample = () => (
@@ -13,6 +14,7 @@ const BasicExample = () => (
     <Switch>
       <Route exact path="/" component={Home} />
       <Route path="/add" component={FormPage} />
+      <Route path="/:id" component={EditFormPage} />
     </Switch>
   </Router>
 );

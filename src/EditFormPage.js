@@ -42,33 +42,37 @@ const usernameAvailable = simpleMemoize(async value => {
   }
 });
 
-class FormPage extends React.Component {
-  state = { list: [] };
+class EditFormPage extends React.Component {
+  state = { editItem: [] };
 
   componentDidMount() {
-    const listRef = firebase.database().ref("list");
-    listRef.on("value", snapshot => {
-      let list = snapshot.val();
-      this.setState({ list });
-      console.log(this.state);
+    console.log("this.props");
+    const editItemRef = firebase
+      .database()
+      .ref(`list/${this.props.match.params.id}`);
+    editItemRef.on("value", snapshot => {
+      let editItem = snapshot.val();
+      this.setState({ editItem });
     });
   }
-  onSubmit(_values) {
-    const listRef = firebase.database().ref("list");
-    listRef.push(_values);
-  }
-
-  removeItem(itemId) {
-    const itemRef = firebase.database().ref(`/list/${itemId}`);
-    itemRef.remove();
+  onSubmit(_newvalues) {
+    const itemRef = firebase
+      .database()
+      .ref(`list/${this.props.match.params.id}`);
+    itemRef.update(_newvalues);
+    console.log(this.props);
+    return this.props.history.push("/add");
   }
 
   render() {
+    if (!Object.values(this.state.editItem).length)
+      return <div>Loading...</div>;
     return (
       <Styles>
         <h1>Create Page</h1>
         <Form
-          onSubmit={this.onSubmit}
+          onSubmit={this.onSubmit.bind(this)}
+          initialValues={this.state.editItem}
           render={({
             handleSubmit,
             reset,
@@ -114,33 +118,15 @@ class FormPage extends React.Component {
               </Field>
               <div className="buttons">
                 <button type="submit" disabled={submitting}>
-                  Submit
-                </button>
-                <button
-                  type="button"
-                  onClick={reset}
-                  disabled={submitting || pristine}
-                >
-                  Reset
+                  Save
                 </button>
               </div>
-              <pre>{JSON.stringify(values, 0, 2)}</pre>
             </form>
           )}
         />
-        <ul>
-          {Object.entries(this.state.list).map(
-            ([title, { username, lastName, age }], key) => (
-              <li key={key}>
-                {`${username}- ${lastName}: ${age}`}
-                <Link to={title}>Edit</Link>
-              </li>
-            )
-          )}
-        </ul>
       </Styles>
     );
   }
 }
 
-export default FormPage;
+export default EditFormPage;
