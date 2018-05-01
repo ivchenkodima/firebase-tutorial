@@ -14,6 +14,8 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "final-form": "^4.6.1",
+    "firebase": "^4.13.1",
     "react-final-form": "^3.4.0",
     "react-firebase": "^2.2.8",
     "react-router": "^4.2.0",
